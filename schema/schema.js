@@ -1,5 +1,5 @@
 // import { clients, projects } from './sample.js'
-import { GraphQLID, GraphQLList, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 import { Project } from '../src/models/Project.model.js'
 import { Client } from '../src/models/Client.model.js'
 
@@ -62,7 +62,40 @@ const RootQuery = new GraphQLObjectType({
   }
 })
 
+// Mutations
+const mutations = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addClient: {
+      type: ClientType,
+      args: {
+        name: { type: GraphQLNonNull(GraphQLString) },
+        email: { type: GraphQLNonNull(GraphQLString) },
+        phone: { type: GraphQLNonNull(GraphQLString) }
+      },
+      resolve(parent, args) {
+        const cl = new Client({
+          name: args.name,
+          email: args.email,
+          phone: args.phone
+        })
+        return cl.save()
+      }
+    },
+    deleteClient: {
+      type: ClientType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) }
+      },
+      resolve(parent, args) {
+        return Client.findOneAndDelete(args.id)
+      }
+    }
+  }
+})
+
 let schema = new GraphQLSchema({
   query: RootQuery,
+  mutation: mutations
 })
 export { schema }
