@@ -120,6 +120,13 @@ const mutations = new GraphQLObjectType({
         })
         return project.save()
       }
+    },
+    deleteProject: {
+      type: ProjectType,
+      args: { id: { type: GraphQLNonNull(GraphQLID) } },
+      resolve(_parent, args) {
+        return Project.findOneAndRemove(args.id)
+      }
     }
   }
 })
