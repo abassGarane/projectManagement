@@ -6,7 +6,7 @@ import { Client } from '../src/models/Client.model.js'
 const ClientType = new GraphQLObjectType({
   name: "Client",
   fields: () => ({
-    name: 'Client',
+    name: { type: GraphQLString },
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     email: { type: GraphQLString },
